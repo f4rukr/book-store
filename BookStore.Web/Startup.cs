@@ -1,5 +1,6 @@
 using BookStore.Database;
 using BookStore.Database.DbContexts;
+using BookStore.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,7 @@ namespace BookStore.Web
         {
             services.AddControllersWithViews();
             services.AddDatabase(Configuration);
+            services.AddAppInsights();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BookStoreDbContext dbContext)
@@ -41,11 +43,11 @@ namespace BookStore.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseAppInsights();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

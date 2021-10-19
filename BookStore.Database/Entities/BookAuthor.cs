@@ -1,4 +1,4 @@
-﻿using BookStore.Model.Interfaces.Common;
+﻿using BookStore.Database.Interfaces.Common;
 using System;
 namespace BookStore.Database.Entities
 {

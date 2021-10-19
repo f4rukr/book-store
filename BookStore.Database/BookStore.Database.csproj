@@ -13,8 +13,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BookStore.Model\BookStore.Model.csproj" />
-  </ItemGroup>
-
 </Project>

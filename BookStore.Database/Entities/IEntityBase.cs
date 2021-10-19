@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BookStore.Model.Interfaces.Common
+namespace BookStore.Database.Interfaces.Common
 {
     public interface IEntityBase
     {

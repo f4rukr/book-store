@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.18.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>
@@ -14,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Database\BookStore.Database.csproj" />
+    <ProjectReference Include="..\BookStore.Service\BookStore.Service.csproj" />
   </ItemGroup>
 
 </Project>

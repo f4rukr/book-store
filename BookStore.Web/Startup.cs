@@ -1,7 +1,9 @@
 using BookStore.Database;
+using BookStore.Database.DbContexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +29,7 @@ namespace BookStore.Web
             services.AddDatabase(Configuration);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BookStoreDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -35,6 +37,7 @@ namespace BookStore.Web
             }
             else
             {
+                dbContext.Database.Migrate();
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }

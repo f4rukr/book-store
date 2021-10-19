@@ -1,5 +1,8 @@
+using AutoMapper;
 using BookStore.Database;
 using BookStore.Database.DbContexts;
+using BookStore.Service;
+using BookStore.Web.AutoMapper;
 using BookStore.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,9 +20,15 @@ namespace BookStore.Web
 {
     public class Startup
     {
+        private MapperConfiguration _mapperConfig { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfile());
+            });
         }
 
         public IConfiguration Configuration { get; }
@@ -28,7 +37,9 @@ namespace BookStore.Web
         {
             services.AddControllersWithViews();
             services.AddDatabase(Configuration);
+            services.AddServices();
             services.AddAppInsights();
+            services.AddSingleton(sp => _mapperConfig.CreateMapper());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BookStoreDbContext dbContext)

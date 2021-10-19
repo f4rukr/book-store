@@ -16,6 +16,7 @@ namespace BookStore.Database.DbContexts
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
+        public DbSet<BookChange> BookChanges { get; set; }
 
 
         /// <summary>

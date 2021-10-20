@@ -17,5 +17,6 @@ namespace BookStore.Database.Entities
         public DateTime UpdatedAt { get; set; }
 
         public ICollection<BookAuthor> BookAuthors { get; set; }
+        public ICollection<BookChange> BookChanges { get; set; }
     }
 }

@@ -27,6 +27,6 @@ namespace BookStore.Model.Books.Request
         [Required(ErrorMessage = "Please select an author")]
         public List<int> AuthorIds { get; set; }
         
-        public List<SelectListItem> drpAuthors { get; set; }
+        public List<SelectListItem> ddlAuthors { get; set; }
     }
 }

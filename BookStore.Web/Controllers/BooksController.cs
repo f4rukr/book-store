@@ -64,7 +64,7 @@ namespace BookStore.Web.Controllers
             {
                 var CreateUpdateBookRequest = new CreateBookRequest()
                 {
-                    drpAuthors = _bookService.GetAuthorsSelectListItem()
+                    ddlAuthors = _bookService.GetAuthorsSelectListItem()
                 };
 
                 return View(CreateUpdateBookRequest);
@@ -88,7 +88,7 @@ namespace BookStore.Web.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                book.drpAuthors = _bookService.GetAuthorsSelectListItem();
+                book.ddlAuthors = _bookService.GetAuthorsSelectListItem();
             }
             catch (Exception ex)
             {
@@ -113,7 +113,7 @@ namespace BookStore.Web.Controllers
                 foreach (var author in book.BookAuthors)
                     bookRequest.SelectedAuthorIds.Add(new SelectListItem() { Value = author.AuthorId.ToString() });
 
-                bookRequest.drpAuthors = _bookService.GetAuthorsSelectListItem();
+                bookRequest.ddlAuthors = _bookService.GetAuthorsSelectListItem();
 
                 return View(bookRequest);
             }
@@ -141,7 +141,7 @@ namespace BookStore.Web.Controllers
                     foreach (var authorId in request.AuthorIds)
                         request.SelectedAuthorIds.Add(new SelectListItem() { Value = authorId.ToString() });
 
-                request.drpAuthors = _bookService.GetAuthorsSelectListItem();
+                request.ddlAuthors = _bookService.GetAuthorsSelectListItem();
                 return View("Edit", request);
             }
             catch (Exception ex)

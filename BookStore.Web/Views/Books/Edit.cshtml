@@ -43,7 +43,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.AuthorIds, new { @class = "col-md-6 col-form-label" })
             <div class="col-md-6">
-                @Html.ListBoxFor(model => model.AuthorIds, new MultiSelectList(Model.drpAuthors, "Value", "Text", Model.SelectedAuthorIds.Select(x => x.Value).ToArray()), new { @class = "form-control", multiple = "multiple", id = "Authors_dropdown" })
+                @Html.ListBoxFor(model => model.AuthorIds, new MultiSelectList(Model.ddlAuthors, "Value", "Text", Model.SelectedAuthorIds.Select(x => x.Value).ToArray()), new { @class = "form-control", multiple = "multiple", id = "Authors_dropdown" })
                 @Html.ValidationMessageFor(model => model.AuthorIds, "", new { @class = "text-danger" })
             </div>
         </div>

@@ -3,11 +3,11 @@ using BookStore.Database.Entities;
 using BookStore.Model.Books.Interfaces;
 using BookStore.Model.Books.Request;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.WebPages.Html;
 
 namespace BookStore.Web.Controllers
 {
@@ -27,11 +27,22 @@ namespace BookStore.Web.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchFilter, string currentFilter, int? pageNumber)
         {
             try
             {
-                return View(await _bookService.GetAllBooksAsync().ConfigureAwait(false));
+                ViewData["CurrentSort"] = sortOrder;
+                ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+                ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+                if (searchFilter != null)
+                    pageNumber = 1;
+                else
+                    searchFilter = currentFilter;
+
+                ViewData["CurrentFilter"] = searchFilter;
+
+                return View(await _bookService.GetBooksAsync(sortOrder, searchFilter, pageNumber).ConfigureAwait(false));
             }
             catch (Exception ex)
             {
@@ -106,7 +117,7 @@ namespace BookStore.Web.Controllers
                 if (id == null)
                     return NotFound();
 
-                var book = await _bookService.GetBookByIdAsync(id);
+                var book = await _bookService.GetBookByIdAsync(id).ConfigureAwait(false);
                 var bookRequest = _mapper.Map<Book, UpdateBookRequest>(book);
 
                 bookRequest.SelectedAuthorIds = new List<SelectListItem>();
@@ -181,6 +192,19 @@ namespace BookStore.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, nameof(ConfirmDelete));
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> GroupBooksByPublishedDate()
+        {
+            try
+            {
+                return View(await _bookService.GroupBooksByPublishDate());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, nameof(GroupBooksByPublishedDate));
                 throw;
             }
         }

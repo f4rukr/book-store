@@ -1,0 +1,33 @@
+﻿@model IEnumerable<BookStore.Model.Books.Response.GroupBooksByDate>
+
+@{
+    ViewData["Title"] = "Number of published books by date";
+}
+
+<h2>Published books by date statistics</h2>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            Published Date
+        </th>
+        <th>
+            Number of books
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishedDate)
+            </td>
+            <td>
+                @item.BookCount
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
+</div>

@@ -3,6 +3,9 @@ using BookStore.Database.DbContexts;
 using BookStore.Database.Entities;
 using BookStore.Model.Books.Interfaces;
 using BookStore.Model.Books.Request;
+using BookStore.Model.Books.Response;
+using BookStore.Service.Pagination;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.WebPages.Html;
 
 namespace BookStore.Service.Books
 {
@@ -58,16 +60,39 @@ namespace BookStore.Service.Books
             }
         }
 
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<List<Book>> GetBooksAsync(string sortOrder, string searchFilter, int? pageNumber)
         {
             try
             {
-                var books = await _dbContext.Books.ToListAsync().ConfigureAwait(false);
-                return books;
+                var books = from b in _dbContext.Books
+                               select b;
+
+
+                if (!String.IsNullOrEmpty(searchFilter))
+                    books = books.Where(s => s.Title.Contains(searchFilter));
+
+                switch (sortOrder)
+                {
+                    case "title_desc":
+                        books = books.OrderByDescending(s => s.Title);
+                        break;
+                    case "Date":
+                        books = books.OrderBy(s => s.Published);
+                        break;
+                    case "date_desc":
+                        books = books.OrderByDescending(s => s.Published);
+                        break;
+                    default:
+                        books = books.OrderBy(s => s.Title);
+                        break;
+                }
+
+                int pageSize = 2;
+                return await PaginatedList<Book>.CreateAsync(books.AsNoTracking(), pageNumber ?? 1, pageSize);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, nameof(GetAllBooksAsync));
+                _logger.LogError(ex, nameof(GetBooksAsync));
                 throw;
             }
         }
@@ -128,7 +153,7 @@ namespace BookStore.Service.Books
                 var bookAuthors = new List<BookAuthor>();
                 foreach (var authorId in request.AuthorIds)
                     bookAuthors.Add(new BookAuthor() { AuthorId = authorId, BookId = (int)request.Id });
-                await _dbContext.AddRangeAsync(bookAuthors);
+                await _dbContext.AddRangeAsync(bookAuthors).ConfigureAwait(false);
 
                 book.Title = request.Title;
                 book.Description = request.Description;
@@ -149,12 +174,12 @@ namespace BookStore.Service.Books
         {
             try
             {
-                var book = _dbContext.Books.FirstOrDefault(x => x.Id == id);
-                if (book != null)
+                var book = await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+                if (book != null) 
+                {
                     _dbContext.Remove(book);
-
-                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-
+                    await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }
                 return;
             }
             catch (Exception ex)
@@ -162,6 +187,16 @@ namespace BookStore.Service.Books
                 _logger.LogError(ex, nameof(DeleteBookAsync));
                 throw;
             }
+        }
+
+        public async Task<List<GroupBooksByDate>> GroupBooksByPublishDate()
+        {
+
+            var result = _dbContext.Books
+                                   .GroupBy( x => x.Published.Date, x => x.Title, (key, value) => 
+                                    new GroupBooksByDate() { PublishedDate = key.Date, BookCount = value.Count() });
+
+            return await result.AsNoTracking().ToListAsync();
         }
     }
 }

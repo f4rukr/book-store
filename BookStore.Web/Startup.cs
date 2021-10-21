@@ -45,7 +45,7 @@ namespace BookStore.Web
             }
             else
             {
-                dbContext.Database.Migrate();
+                dbContext.Database.Migrate(); // I like to execute db migration only in not local environments. From local I'm doing it manually
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }

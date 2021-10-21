@@ -36,7 +36,9 @@ namespace BookStore.Service.Books
         {
             try
             {
-                var authorsListeItem = await _dbContext.Authors.Select(x => new SelectListItem { Text = string.Format("{0} {1}", x.FirstName, x.LastName), Value = x.Id.ToString() }).ToListAsync().ConfigureAwait(false);
+                var authorsListeItem = await _dbContext.Authors.Select(x => new SelectListItem { Text = string.Format("{0} {1}", x.FirstName, x.LastName), Value = x.Id.ToString() })
+                                                               .ToListAsync()
+                                                               .ConfigureAwait(false);
                 return authorsListeItem;
             }
             catch (Exception ex)

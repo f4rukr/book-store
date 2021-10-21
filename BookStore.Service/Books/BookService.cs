@@ -32,11 +32,11 @@ namespace BookStore.Service.Books
             _mapper = mapper;
         }
 
-        public List<SelectListItem> GetAuthorsSelectListItem()
+        public async Task<List<SelectListItem>> GetAuthorsSelectListItem()
         {
             try
             {
-                var authorsListeItem = _dbContext.Authors.Select(x => new SelectListItem { Text = string.Format("{0} {1}", x.FirstName, x.LastName), Value = x.Id.ToString() }).ToList();
+                var authorsListeItem = await _dbContext.Authors.Select(x => new SelectListItem { Text = string.Format("{0} {1}", x.FirstName, x.LastName), Value = x.Id.ToString() }).ToListAsync().ConfigureAwait(false);
                 return authorsListeItem;
             }
             catch (Exception ex)
@@ -67,7 +67,6 @@ namespace BookStore.Service.Books
                 var books = from b in _dbContext.Books
                                select b;
 
-
                 if (!String.IsNullOrEmpty(searchFilter))
                     books = books.Where(s => s.Title.Contains(searchFilter));
 
@@ -87,7 +86,7 @@ namespace BookStore.Service.Books
                         break;
                 }
 
-                int pageSize = 2;
+                int pageSize = 3;
                 return await PaginatedList<Book>.CreateAsync(books.AsNoTracking(), pageNumber ?? 1, pageSize);
             }
             catch (Exception ex)

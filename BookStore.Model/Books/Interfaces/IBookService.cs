@@ -14,7 +14,7 @@ namespace BookStore.Model.Books.Interfaces
     {
         public Task<List<Book>> GetBooksAsync(string sortOrder, string searchFilter, int? pageNumber);
         public Task<Book> GetBookByIdAsync(int? id);
-        public List<SelectListItem> GetAuthorsSelectListItem();
+        public Task<List<SelectListItem>> GetAuthorsSelectListItem();
         public Task CreateBookAsync(CreateBookRequest request);
         public Task UpdateBookAsync(UpdateBookRequest request);
         public Task DeleteBookAsync(int id);

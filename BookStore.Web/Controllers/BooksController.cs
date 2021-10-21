@@ -69,13 +69,13 @@ namespace BookStore.Web.Controllers
             }
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try
             {
                 var CreateUpdateBookRequest = new CreateBookRequest()
                 {
-                    ddlAuthors = _bookService.GetAuthorsSelectListItem()
+                    ddlAuthors = await _bookService.GetAuthorsSelectListItem().ConfigureAwait(false)
                 };
 
                 return View(CreateUpdateBookRequest);
@@ -99,7 +99,7 @@ namespace BookStore.Web.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                book.ddlAuthors = _bookService.GetAuthorsSelectListItem();
+                book.ddlAuthors = await _bookService.GetAuthorsSelectListItem().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -124,7 +124,7 @@ namespace BookStore.Web.Controllers
                 foreach (var author in book.BookAuthors)
                     bookRequest.SelectedAuthorIds.Add(new SelectListItem() { Value = author.AuthorId.ToString() });
 
-                bookRequest.ddlAuthors = _bookService.GetAuthorsSelectListItem();
+                bookRequest.ddlAuthors = await _bookService.GetAuthorsSelectListItem().ConfigureAwait(false);
 
                 return View(bookRequest);
             }
@@ -152,7 +152,7 @@ namespace BookStore.Web.Controllers
                     foreach (var authorId in request.AuthorIds)
                         request.SelectedAuthorIds.Add(new SelectListItem() { Value = authorId.ToString() });
 
-                request.ddlAuthors = _bookService.GetAuthorsSelectListItem();
+                request.ddlAuthors = await _bookService.GetAuthorsSelectListItem().ConfigureAwait(false);
                 return View("Edit", request);
             }
             catch (Exception ex)
